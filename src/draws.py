@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import src.models as tarot
+import src.intent as intent_module
 from typing import Callable
+from datetime import datetime as dt
 
 
 def process_draw(inp: str) -> Callable:
@@ -16,15 +18,22 @@ def process_draw(inp: str) -> Callable:
         raise ValueError
 
 
-def read_card(card: tarot.MajorArcana | tarot.MinorArcana) -> dict:
+def read_card(card: tarot.MajorArcana | tarot.MinorArcana) -> str:
     if isinstance(card, tarot.MajorArcana):
         return card.read_major_card()
     if isinstance(card, tarot.MinorArcana):
         return card.read_minor_card()
 
 
-def draw_one(deck: tarot.Deck, intent: int) -> dict:
-    card = deck.draw_card(intent=intent)
+def draw_one(deck: tarot.Deck, intent: int | str | dt | None = None) -> dict:
+    if intent is None:
+        intent_seed = dt.now().microsecond
+    elif isinstance(intent, (str, dt)):
+        intent_seed = intent_module.read_intent(intent)
+    else:
+        intent_seed = intent
+    
+    card = deck.draw_card(intent=intent_seed)
     message = read_card(card)
 
     return {
@@ -34,10 +43,17 @@ def draw_one(deck: tarot.Deck, intent: int) -> dict:
     }
 
 
-def draw_past_present_future(deck: tarot.Deck, intent: int) -> dict:
-    past = deck.draw_card(intent=intent)
-    present = deck.draw_card(intent=intent)
-    future = deck.draw_card(intent=intent)
+def draw_past_present_future(deck: tarot.Deck, intent: int | str | dt | None = None) -> dict:
+    if intent is None:
+        intent_seed = dt.now().microsecond
+    elif isinstance(intent, (str, dt)):
+        intent_seed = intent_module.read_intent(intent)
+    else:
+        intent_seed = intent
+    
+    past = deck.draw_card(intent=intent_seed)
+    present = deck.draw_card(intent=intent_seed + 1)
+    future = deck.draw_card(intent=intent_seed + 2)
 
     past_message = read_card(past)
     present_message = read_card(present)

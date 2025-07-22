@@ -1,5 +1,6 @@
 from __future__ import annotations
 import random
+from datetime import datetime as dt
 
 
 class Deck:
@@ -12,7 +13,7 @@ class Deck:
     def __len__(self):
         return len(self.major_arcana) + len(self.minor_arcana)
 
-    def draw_card(self, intent: int) -> MinorArcana | MajorArcana:
+    def draw_card(self, intent: int=dt.now().microsecond) -> MinorArcana | MajorArcana:
         random.seed(intent)
         deck = self.major_arcana + self.minor_arcana
         card = deck.pop(random.randrange(len(deck)))

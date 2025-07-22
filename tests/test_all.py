@@ -79,11 +79,27 @@ def test_draw_past_present_future():
     assert "Future" in message["spread"]
 
 
+def test_draw_past_present_future_cards_are_different():
+    d = builders.build_full_deck()
+    inp = "past present future"
+    draw_function = draws.process_draw(inp)
+    message = draw_function(d, intent=123)
+
+    past_card = message["cards"][0]
+    present_card = message["cards"][1]
+    future_card = message["cards"][2]
+
+    assert past_card != present_card
+    assert present_card != future_card
+    assert past_card != future_card
+
+
 def test_draw_with_prompt():
     d = builders.build_full_deck()
-    inp = "draw one What is in store for today?"
+    inp = "draw one"
+    prompt = "What is in store for today?"
     draw_function = draws.process_draw(inp)
-    message = draw_function(d)
+    message = draw_function(d, intent=prompt)
 
     assert message["cards"]
     assert message["messages"]

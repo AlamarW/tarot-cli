@@ -11,6 +11,7 @@ def process_draw(inp: str) -> Callable:
         "draw one": draw_one,
         "draw": draw_one,
         "past present future": draw_past_present_future,
+        "celtic cross": draw_celtic_cross,
     }
     if inp in action_dict:
         return action_dict[inp]
@@ -32,7 +33,7 @@ def draw_one(deck: tarot.Deck, intent: int | str | dt | None = None) -> dict:
         intent_seed = intent_module.read_intent(intent)
     else:
         intent_seed = intent
-    
+
     card = deck.draw_card(intent=intent_seed)
     message = read_card(card)
 
@@ -43,14 +44,16 @@ def draw_one(deck: tarot.Deck, intent: int | str | dt | None = None) -> dict:
     }
 
 
-def draw_past_present_future(deck: tarot.Deck, intent: int | str | dt | None = None) -> dict:
+def draw_past_present_future(
+    deck: tarot.Deck, intent: int | str | dt | None = None
+) -> dict:
     if intent is None:
         intent_seed = dt.now().microsecond
     elif isinstance(intent, (str, dt)):
         intent_seed = intent_module.read_intent(intent)
     else:
         intent_seed = intent
-    
+
     past = deck.draw_card(intent=intent_seed)
     present = deck.draw_card(intent=intent_seed + 1)
     future = deck.draw_card(intent=intent_seed + 2)
@@ -63,4 +66,43 @@ def draw_past_present_future(deck: tarot.Deck, intent: int | str | dt | None = N
         "spread": ("Past", "Present", "Future"),
         "cards": (str(past), str(present), str(future)),
         "messages": (past_message, present_message, future_message),
+    }
+
+
+def draw_celtic_cross(deck: tarot.Deck, intent: int | str | dt | None = None) -> dict:
+    if intent is None:
+        intent_seed = dt.now().microsecond
+    elif isinstance(intent, (str, dt)):
+        intent_seed = intent_module.read_intent(intent)
+    else:
+        intent_seed = intent
+
+    # Draw 10 cards for the Celtic Cross spread
+    cards = []
+    for i in range(10):
+        card = deck.draw_card(intent=intent_seed + i)
+        cards.append(card)
+
+    # Celtic Cross positions in traditional order
+    positions = (
+        "Present Situation",
+        "Cross/Challenge",
+        "Distant Past/Foundation",
+        "Recent Past",
+        "Possible Outcome",
+        "Immediate Future",
+        "Your Approach",
+        "External Influences",
+        "Inner Feelings",
+        "Final Outcome",
+    )
+
+    # Read each card
+    messages = tuple(read_card(card) for card in cards)
+    card_strings = tuple(str(card) for card in cards)
+
+    return {
+        "spread": positions,
+        "cards": card_strings,
+        "messages": messages,
     }

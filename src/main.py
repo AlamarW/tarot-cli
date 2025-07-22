@@ -9,7 +9,9 @@ import optparse
 def main():
     parser = optparse.OptionParser()
     parser.add_option(
-        "-s", "--spread", help="choose spread between [draw one, past present future]"
+        "-s",
+        "--spread",
+        help="choose spread between [draw one, past present future, celtic cross]",
     )
     parser.add_option("-p", "--prompt", help="write your prompt for the spread")
 
@@ -21,7 +23,7 @@ def main():
     if options.spread:
         inp = options.spread
     else:
-        inp = input("Enter spread type (draw one, past present future): ")
+        inp = input("Enter spread type (draw one, past present future, celtic cross): ")
 
     # Get prompt from options or user input
     if options.prompt:

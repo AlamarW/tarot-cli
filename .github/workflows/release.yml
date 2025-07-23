@@ -1,0 +1,38 @@
+name: Release Build
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            asset_name: tarot-linux
+          - os: macos-latest
+            asset_name: tarot-macos
+          - os: windows-latest
+            asset_name: tarot-windows.exe
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - uses: actions/checkout@v4
+    - uses: astral-sh/setup-uv@v1
+    - name: Build
+      run: |
+        uv sync
+        uv run python build.py
+    - name: Rename binary for release
+      run: |
+        if [[ "${{ runner.os }}" == "Windows" ]]; then
+          mv dist/tarot.exe dist/${{ matrix.asset_name }}
+        else
+          mv dist/tarot dist/${{ matrix.asset_name }}
+        fi
+      shell: bash
+    - name: Upload Release Asset
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist/${{ matrix.asset_name }}

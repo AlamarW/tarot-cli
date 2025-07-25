@@ -1,4 +1,4 @@
-#!/bin/bash
+#!ebin/bash
 # Tarot CLI User Installation Script
 # Downloads and installs the latest release from GitHub
 
@@ -12,7 +12,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-REPO="USERNAME/tarot-cli"  # Replace with actual GitHub repo
+REPO="AlamarW/tarot-cli"
 BINARY_NAME="tarot"
 
 echo -e "${BLUE}Tarot CLI Installer${NC}"
@@ -33,14 +33,9 @@ case "$OS" in
         INSTALL_DIR="/usr/local/bin"
         NEED_SUDO=true
         ;;
-    CYGWIN*|MINGW*|MSYS*)
-        PLATFORM="windows"
-        INSTALL_DIR="$HOME/.local/bin"
-        NEED_SUDO=false
-        BINARY_NAME="tarot.exe"
-        ;;
     *)
         echo -e "${RED}Error: Unsupported platform: $OS${NC}"
+        echo -e "${YELLOW}For Windows, please use the PowerShell installer: install-user.ps1${NC}"
         exit 1
         ;;
 esac
@@ -51,9 +46,6 @@ echo -e "${YELLOW}Detected platform: $PLATFORM${NC}"
 echo "Fetching latest release information..."
 DOWNLOAD_URL="https://github.com/$REPO/releases/latest/download/tarot-$PLATFORM"
 
-if [ "$PLATFORM" = "windows" ]; then
-    DOWNLOAD_URL="${DOWNLOAD_URL}.exe"
-fi
 
 echo -e "${YELLOW}Download URL: $DOWNLOAD_URL${NC}"
 

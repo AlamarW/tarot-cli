@@ -21,13 +21,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     
     steps:
-    - name: Upload Release Asset
-      uses: softprops/action-gh-release@v1
-      with:
-        files: dist/${{ matrix.asset_name }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-
     - uses: actions/checkout@v4
     - uses: astral-sh/setup-uv@v1
     - name: Build
@@ -46,3 +39,5 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: dist/${{ matrix.asset_name }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

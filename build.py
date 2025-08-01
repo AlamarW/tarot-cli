@@ -60,7 +60,11 @@ def build_executable():
 
 def test_executable():
     """Test the built executable."""
-    executable = Path("dist/tarot")
+    # On Windows, PyInstaller creates .exe files
+    if sys.platform == "win32":
+        executable = Path("dist/tarot.exe")
+    else:
+        executable = Path("dist/tarot")
 
     if not executable.exists():
         print("Executable not found!")

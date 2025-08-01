@@ -78,12 +78,12 @@ def test_executable():
             [str(executable), "--help"], capture_output=True, text=True, timeout=10
         )
         if result.returncode == 0:
-            print("✓ Help command works")
+            print("[OK] Help command works")
         else:
-            print("✗ Help command failed")
+            print("[FAIL] Help command failed")
             return False
     except subprocess.TimeoutExpired:
-        print("✗ Help command timed out")
+        print("[FAIL] Help command timed out")
         return False
 
     # Test quick draw
@@ -95,16 +95,16 @@ def test_executable():
             timeout=15,
         )
         if result.returncode == 0 and "of" in result.stdout:
-            print("✓ Draw command works")
-            print("✓ Executable is functional")
+            print("[OK] Draw command works")
+            print("[OK] Executable is functional")
             return True
         else:
-            print("✗ Draw command failed")
+            print("[FAIL] Draw command failed")
             print(f"stdout: {result.stdout}")
             print(f"stderr: {result.stderr}")
             return False
     except subprocess.TimeoutExpired:
-        print("✗ Draw command timed out")
+        print("[FAIL] Draw command timed out")
         return False
 
 

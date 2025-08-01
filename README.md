@@ -9,9 +9,3 @@ Tarot CLI currently supports the following options:
         past present future, and Celtic cross)
     -p: prompt, use a specific question to guide your tarot reading 
         (implementation details below)
-
-## Installation (linux & MacOS)
-
-**Download first, then run**
-`wget https://raw.githubusercontent.com/AlamarW/tarot-cli/main/install-user.sh`
-`bash install-user.sh`

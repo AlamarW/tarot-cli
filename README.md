@@ -15,8 +15,3 @@ Tarot CLI currently supports the following options:
 **Download first, then run**
 `wget https://raw.githubusercontent.com/AlamarW/tarot-cli/main/install-user.sh`
 `bash install-user.sh`
-
-## Installation (Windows)
-
-`Invoke-WebRequest -Uri "https://raw.githubusercontent.com/AlamarW/tarot-cli/main/install-user.ps1" -OutFile "install-user.ps1"`
-`.\install-user.ps1`

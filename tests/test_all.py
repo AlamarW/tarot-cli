@@ -238,3 +238,17 @@ def test_draw_three():
 
     assert len(message["cards"]) == 3
     assert len(message["messages"]) == 3
+
+
+def test_draw_three_unique():
+    d = builders.build_full_deck()
+    dt = datetime(2024, 1, 1, 12, 0, 0, 123456)
+
+    inp = "draw three"
+    draw_function = spreads.process_draw(inp)
+    message = draw_function(d, intent=dt)
+
+    assert len(message["cards"]) == 3
+    assert len(message["messages"]) == 3
+    assert message["cards"][0] != message["cards"][1]
+    assert message["cards"][1] != message["cards"][2]

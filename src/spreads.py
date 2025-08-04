@@ -12,6 +12,7 @@ def process_draw(inp: str) -> Callable:
         "draw": draw_one,
         "past present future": draw_past_present_future,
         "celtic cross": draw_celtic_cross,
+        "draw three": draw_three,
     }
     if inp in action_dict:
         return action_dict[inp]
@@ -43,6 +44,30 @@ def draw_one(deck: tarot.Deck, intent: int | str | dt | None = None) -> dict:
         "messages": (message,),
     }
 
+
+def draw_three(
+        deck: tarot.Deck, intent: int | str | dt | None = None
+) -> dict:
+    if intent is None:
+        intent_seed = dt.now().microsecond
+    elif isinstance(intent, (str, dt)):
+        intent_seed = intent_module.read_intent(intent)
+    else:
+        intent_seed = intent
+    
+    card1 = deck.draw_card(intent=intent_seed)
+    card2 = deck.draw_card(intent=intent_seed)
+    card3 = deck.draw_card(intent=intent_seed)
+
+    card1_message = read_card(card1)
+    card2_message = read_card(card2)
+    card3_message = read_card(card3)
+
+    return {
+        "spread": ("First", "Second", "Third"),
+        "cards": (str(card1), str(card2), str(card3)),
+        "messages": (card1_message, card2_message, card3_message),
+    }
 
 def draw_past_present_future(
     deck: tarot.Deck, intent: int | str | dt | None = None

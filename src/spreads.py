@@ -56,8 +56,8 @@ def draw_three(
         intent_seed = intent
     
     card1 = deck.draw_card(intent=intent_seed)
-    card2 = deck.draw_card(intent=intent_seed)
-    card3 = deck.draw_card(intent=intent_seed)
+    card2 = deck.draw_card(intent=intent_seed+1)
+    card3 = deck.draw_card(intent=intent_seed+2)
 
     card1_message = read_card(card1)
     card2_message = read_card(card2)

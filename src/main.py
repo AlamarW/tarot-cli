@@ -1,5 +1,5 @@
 import src.builders as builds
-import src.draws as draws
+import src.spreads as spreads
 import src.intent as intent
 from datetime import datetime as dt
 import sys
@@ -35,7 +35,7 @@ def main():
     # Convert intent string to seed
     intent_seed = intent.read_intent(user_intent)
 
-    draw_function = draws.process_draw(inp)
+    draw_function = spreads.process_draw(inp)
 
     draw = draw_function(deck, intent=intent_seed)
 

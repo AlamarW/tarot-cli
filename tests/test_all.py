@@ -1,7 +1,7 @@
 from __future__ import annotations
 import src.models as tarot
 import src.builders as builders
-import src.draws as draws
+import src.spreads as spreads
 import src.intent as intent
 from datetime import datetime
 
@@ -54,7 +54,7 @@ def test_read_major_card():
 
 def test_draw_one():
     d = builders.build_full_deck()
-    c_message = draws.draw_one(d)
+    c_message = spreads.draw_one(d)
 
     assert isinstance(c_message, dict)
     assert c_message["cards"]
@@ -64,7 +64,7 @@ def test_draw_one():
 def test_draw_w_input():
     d = builders.build_full_deck()
     inp = "draw one"
-    draw_function = draws.process_draw(inp)
+    draw_function = spreads.process_draw(inp)
     message = draw_function(d)
     assert message["cards"]
     assert message["messages"]
@@ -73,7 +73,7 @@ def test_draw_w_input():
 def test_draw_past_present_future():
     d = builders.build_full_deck()
     inp = "past present future"
-    draw_function = draws.process_draw(inp)
+    draw_function = spreads.process_draw(inp)
     message = draw_function(d)
 
     assert "Past" in message["spread"]
@@ -84,7 +84,7 @@ def test_draw_past_present_future():
 def test_draw_past_present_future_cards_are_different():
     d = builders.build_full_deck()
     inp = "past present future"
-    draw_function = draws.process_draw(inp)
+    draw_function = spreads.process_draw(inp)
     message = draw_function(d, intent=123)
 
     past_card = message["cards"][0]
@@ -100,7 +100,7 @@ def test_draw_with_prompt():
     d = builders.build_full_deck()
     inp = "draw one"
     prompt = "What is in store for today?"
-    draw_function = draws.process_draw(inp)
+    draw_function = spreads.process_draw(inp)
     message = draw_function(d, intent=prompt)
 
     assert message["cards"]
@@ -109,12 +109,12 @@ def test_draw_with_prompt():
 
 def test_process_draw_invalid_input():
     with pytest.raises(ValueError):
-        draws.process_draw("invalid spread")
+        spreads.process_draw("invalid spread")
 
 
 def test_draw_one_with_int_intent():
     d = builders.build_full_deck()
-    message = draws.draw_one(d, intent=42)
+    message = spreads.draw_one(d, intent=42)
 
     assert message["cards"]
     assert message["messages"]
@@ -122,7 +122,7 @@ def test_draw_one_with_int_intent():
 
 def test_draw_past_present_future_with_int_intent():
     d = builders.build_full_deck()
-    message = draws.draw_past_present_future(d, intent=42)
+    message = spreads.draw_past_present_future(d, intent=42)
 
     assert len(message["cards"]) == 3
     assert len(message["messages"]) == 3
@@ -142,7 +142,7 @@ def test_read_intent_with_unsupported_type():
 def test_draw_past_present_future_with_datetime_intent():
     d = builders.build_full_deck()
     dt = datetime(2024, 1, 1, 12, 0, 0, 123456)
-    message = draws.draw_past_present_future(d, intent=dt)
+    message = spreads.draw_past_present_future(d, intent=dt)
 
     assert len(message["cards"]) == 3
     assert len(message["messages"]) == 3
@@ -154,7 +154,7 @@ def test_draw_past_present_future_with_datetime_intent():
 def test_draw_celtic_cross():
     d = builders.build_full_deck()
     inp = "celtic cross"
-    draw_function = draws.process_draw(inp)
+    draw_function = spreads.process_draw(inp)
     message = draw_function(d, intent=42)
 
     # Celtic Cross has 10 positions
@@ -192,7 +192,7 @@ def test_draw_celtic_cross_empty_deck():
     empty_deck = tarot.Deck([], [])
     
     inp = "celtic cross"
-    draw_function = draws.process_draw(inp)
+    draw_function = spreads.process_draw(inp)
     
     # Should raise a ValueError immediately when trying to draw from empty deck
     with pytest.raises(ValueError):
@@ -205,7 +205,7 @@ def test_draw_celtic_cross_with_string_intent():
     d2 = builders.build_full_deck()
     
     inp = "celtic cross"
-    draw_function = draws.process_draw(inp)
+    draw_function = spreads.process_draw(inp)
     prompt = "What path should I take in my career?"
     
     message1 = draw_function(d1, intent=prompt)
@@ -222,8 +222,19 @@ def test_draw_celtic_cross_with_datetime_intent():
     dt = datetime(2024, 1, 1, 12, 0, 0, 123456)
     
     inp = "celtic cross"
-    draw_function = draws.process_draw(inp)
+    draw_function = spreads.process_draw(inp)
     message = draw_function(d, intent=dt)
     
     assert len(message["cards"]) == 10
     assert len(message["messages"]) == 10
+
+def test_draw_three():
+    d = builders.build_full_deck()
+    dt = datetime(2024, 1, 1, 12, 0, 0, 123456)
+
+    inp = "draw three"
+    draw_function = spreads.process_draw(inp)
+    message = draw_function(d, intent=dt)
+
+    assert len(message["cards"]) == 3
+    assert len(message["messages"]) == 3

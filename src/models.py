@@ -9,14 +9,14 @@ class Deck:
     ) -> None:
         self.major_arcana = major_arcana
         self.minor_arcana = minor_arcana
+        self.deck = major_arcana + minor_arcana
 
     def __len__(self):
         return len(self.major_arcana) + len(self.minor_arcana)
 
     def draw_card(self, intent: int=dt.now().microsecond) -> MinorArcana | MajorArcana:
         random.seed(intent)
-        deck = self.major_arcana + self.minor_arcana
-        card = deck.pop(random.randrange(len(deck)))
+        card = self.deck.pop(random.randrange(len(self.deck)))
         return card
 
 

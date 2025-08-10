@@ -28,15 +28,13 @@ def main():
     # Get prompt from options or user input
     if options.prompt:
         user_intent = options.prompt
+        intent_seed = intent.read_intent(user_intent)
 
     else:
         user_intent = dt.now()
-
-    # Convert intent string to seed
-    intent_seed = intent.read_intent(user_intent)
+        intent_seed = intent.read_intent(user_intent)
 
     draw_function = spreads.process_draw(inp)
-
     draw = draw_function(deck, intent=intent_seed)
 
     # Clear previous input lines if interactive

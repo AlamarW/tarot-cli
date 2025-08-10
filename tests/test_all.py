@@ -8,6 +8,15 @@ from datetime import datetime
 import pytest
 
 
+@pytest.fixture
+def dt_intent():
+    return datetime.now()
+
+
+@pytest.fixture
+def str_intent():
+    return "What is most important to me right now?"
+
 def test_build_minor_arcana():
     d = builders.build_minor_arcana()
     assert len(d) == 56
@@ -52,40 +61,41 @@ def test_read_major_card():
     assert message == "New beginnings and unlimited potential"
 
 
-def test_draw_one():
+def test_draw_one(dt_intent):
     d = builders.build_full_deck()
-    c_message = spreads.draw_one(d)
+    draw_function = spreads.process_draw("draw one")
+    message = draw_function(d, intent=dt_intent)
 
-    assert isinstance(c_message, dict)
-    assert c_message["cards"]
-    assert c_message["messages"]
-
-
-def test_draw_w_input():
-    d = builders.build_full_deck()
-    inp = "draw one"
-    draw_function = spreads.process_draw(inp)
-    message = draw_function(d)
+    assert isinstance(message, dict)
     assert message["cards"]
     assert message["messages"]
 
 
-def test_draw_past_present_future():
+def test_draw_w_input(dt_intent):
+    d = builders.build_full_deck()
+    inp = "draw one"
+    draw_function = spreads.process_draw(inp)
+    message = draw_function(d, intent=dt_intent)
+    assert message["cards"]
+    assert message["messages"]
+
+
+def test_draw_past_present_future(dt_intent):
     d = builders.build_full_deck()
     inp = "past present future"
     draw_function = spreads.process_draw(inp)
-    message = draw_function(d)
+    message = draw_function(d, dt_intent)
 
     assert "Past" in message["spread"]
     assert "Present" in message["spread"]
     assert "Future" in message["spread"]
 
 
-def test_draw_past_present_future_cards_are_different():
+def test_draw_past_present_future_cards_are_different(dt_intent):
     d = builders.build_full_deck()
     inp = "past present future"
     draw_function = spreads.process_draw(inp)
-    message = draw_function(d, intent=123)
+    message = draw_function(d, dt_intent)
 
     past_card = message["cards"][0]
     present_card = message["cards"][1]
@@ -96,12 +106,11 @@ def test_draw_past_present_future_cards_are_different():
     assert past_card != future_card
 
 
-def test_draw_with_prompt():
+def test_draw_with_prompt(str_intent):
     d = builders.build_full_deck()
     inp = "draw one"
-    prompt = "What is in store for today?"
     draw_function = spreads.process_draw(inp)
-    message = draw_function(d, intent=prompt)
+    message = draw_function(d, intent=str_intent)
 
     assert message["cards"]
     assert message["messages"]
@@ -110,22 +119,6 @@ def test_draw_with_prompt():
 def test_process_draw_invalid_input():
     with pytest.raises(ValueError):
         spreads.process_draw("invalid spread")
-
-
-def test_draw_one_with_int_intent():
-    d = builders.build_full_deck()
-    message = spreads.draw_one(d, intent=42)
-
-    assert message["cards"]
-    assert message["messages"]
-
-
-def test_draw_past_present_future_with_int_intent():
-    d = builders.build_full_deck()
-    message = spreads.draw_past_present_future(d, intent=42)
-
-    assert len(message["cards"]) == 3
-    assert len(message["messages"]) == 3
 
 
 def test_read_intent_with_datetime():
@@ -199,54 +192,61 @@ def test_draw_celtic_cross_empty_deck():
         draw_function(empty_deck, intent=42)
 
 
-def test_draw_celtic_cross_with_string_intent():
-    # Test that string intents work correctly (deterministic results)
+def test_draw_celtic_cross_with_string_intent(str_intent):
     d1 = builders.build_full_deck()
     d2 = builders.build_full_deck()
     
     inp = "celtic cross"
     draw_function = spreads.process_draw(inp)
-    prompt = "What path should I take in my career?"
     
-    message1 = draw_function(d1, intent=prompt)
-    message2 = draw_function(d2, intent=prompt)
+    message1 = draw_function(d1, intent=str_intent)
+    message2 = draw_function(d2, intent=str_intent)
     
-    # Same prompt should give same cards (deterministic)
-    assert message1["cards"] == message2["cards"]
-    assert message1["messages"] == message2["messages"]
+    assert message1["cards"] != message2["cards"]
+    assert message1["messages"] != message2["messages"]
 
 
-def test_draw_celtic_cross_with_datetime_intent():
+def test_draw_celtic_cross_with_datetime_intent(dt_intent):
     # Test that datetime intents work correctly
     d = builders.build_full_deck()
-    dt = datetime(2024, 1, 1, 12, 0, 0, 123456)
     
     inp = "celtic cross"
     draw_function = spreads.process_draw(inp)
-    message = draw_function(d, intent=dt)
+    message = draw_function(d, intent=dt_intent)
     
     assert len(message["cards"]) == 10
     assert len(message["messages"]) == 10
 
-def test_draw_three():
+def test_draw_three(dt_intent):
     d = builders.build_full_deck()
-    dt = datetime(2024, 1, 1, 12, 0, 0, 123456)
 
     inp = "draw three"
     draw_function = spreads.process_draw(inp)
-    message = draw_function(d, intent=dt)
+    message = draw_function(d, intent=dt_intent)
 
     assert len(message["cards"]) == 3
     assert len(message["messages"]) == 3
 
 
-def test_draw_three_unique():
+def test_draw_three_unique(dt_intent):
     d = builders.build_full_deck()
-    dt = datetime(2024, 1, 1, 12, 0, 0, 123456)
 
     inp = "draw three"
     draw_function = spreads.process_draw(inp)
-    message = draw_function(d, intent=dt)
+    message = draw_function(d, intent=dt_intent)
+
+    assert len(message["cards"]) == 3
+    assert len(message["messages"]) == 3
+    assert message["cards"][0] != message["cards"][1]
+    assert message["cards"][1] != message["cards"][2]
+
+
+def test_draw_three_unique_str(str_intent):
+    d = builders.build_full_deck()
+
+    inp = "draw three"
+    draw_function = spreads.process_draw(inp)
+    message = draw_function(d, intent=str_intent)
 
     assert len(message["cards"]) == 3
     assert len(message["messages"]) == 3

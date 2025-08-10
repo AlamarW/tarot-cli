@@ -17,7 +17,7 @@ def process_draw(inp: str) -> Callable:
     if inp in action_dict:
         return action_dict[inp]
     else:
-        raise ValueError
+        raise ValueError(f"could not find {inp}")
 
 
 def read_card(card: tarot.MajorArcana | tarot.MinorArcana) -> str:
@@ -27,10 +27,8 @@ def read_card(card: tarot.MajorArcana | tarot.MinorArcana) -> str:
         return card.read_minor_card()
 
 
-def draw_one(deck: tarot.Deck, intent: int | str | dt | None = None) -> dict:
-    if intent is None:
-        intent_seed = dt.now().microsecond
-    elif isinstance(intent, (str, dt)):
+def draw_one(deck: tarot.Deck, intent: int | str | dt ) -> dict:
+    if isinstance(intent, (str, dt)):
         intent_seed = intent_module.read_intent(intent)
     else:
         intent_seed = intent
@@ -48,16 +46,14 @@ def draw_one(deck: tarot.Deck, intent: int | str | dt | None = None) -> dict:
 def draw_three(
         deck: tarot.Deck, intent: int | str | dt | None = None
 ) -> dict:
-    if intent is None:
-        intent_seed = dt.now().microsecond
-    elif isinstance(intent, (str, dt)):
+    if isinstance(intent, (str, dt)):
         intent_seed = intent_module.read_intent(intent)
     else:
         intent_seed = intent
-    
+
     card1 = deck.draw_card(intent=intent_seed)
-    card2 = deck.draw_card(intent=intent_seed+1)
-    card3 = deck.draw_card(intent=intent_seed+2)
+    card2 = deck.draw_card(intent=intent_seed)
+    card3 = deck.draw_card(intent=intent_seed)
 
     card1_message = read_card(card1)
     card2_message = read_card(card2)
@@ -70,18 +66,16 @@ def draw_three(
     }
 
 def draw_past_present_future(
-    deck: tarot.Deck, intent: int | str | dt | None = None
+    deck: tarot.Deck, intent: int | str | dt = dt.now()
 ) -> dict:
-    if intent is None:
-        intent_seed = dt.now().microsecond
-    elif isinstance(intent, (str, dt)):
+    if isinstance(intent, (str, dt)):
         intent_seed = intent_module.read_intent(intent)
     else:
         intent_seed = intent
 
     past = deck.draw_card(intent=intent_seed)
-    present = deck.draw_card(intent=intent_seed + 1)
-    future = deck.draw_card(intent=intent_seed + 2)
+    present = deck.draw_card(intent=intent_seed)
+    future = deck.draw_card(intent=intent_seed)
 
     past_message = read_card(past)
     present_message = read_card(present)
@@ -94,10 +88,8 @@ def draw_past_present_future(
     }
 
 
-def draw_celtic_cross(deck: tarot.Deck, intent: int | str | dt | None = None) -> dict:
-    if intent is None:
-        intent_seed = dt.now().microsecond
-    elif isinstance(intent, (str, dt)):
+def draw_celtic_cross(deck: tarot.Deck, intent: int | str | dt) -> dict:
+    if isinstance(intent, (str, dt)):
         intent_seed = intent_module.read_intent(intent)
     else:
         intent_seed = intent
@@ -105,7 +97,7 @@ def draw_celtic_cross(deck: tarot.Deck, intent: int | str | dt | None = None) ->
     # Draw 10 cards for the Celtic Cross spread
     cards = []
     for i in range(10):
-        card = deck.draw_card(intent=intent_seed + i)
+        card = deck.draw_card(intent=intent_seed)
         cards.append(card)
 
     # Celtic Cross positions in traditional order

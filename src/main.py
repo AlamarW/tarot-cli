@@ -24,7 +24,7 @@ def main():
     deck = builds.build_full_deck()
 
     if options.spread:
-        inp = options.spread
+        inp = options.spread.lower()
 
         if options.prompt:
             user_intent = options.prompt
@@ -43,7 +43,7 @@ def main():
                 print(draw["messages"][i] + "\n")
     else:
         while True:
-            inp = input("Enter spread type (draw one, past present future, celtic cross) or type exit to exit: ")
+            inp = input("Enter spread type (draw one, past present future, celtic cross) or type exit to exit: ").lower()
             if inp == "exit":
                 print("Exiting Tarot-cli")
                 time.sleep(WAIT_TIME)

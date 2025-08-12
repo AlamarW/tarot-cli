@@ -51,18 +51,24 @@ def draw_three(
     else:
         intent_seed = intent
 
-    card1 = deck.draw_card(intent=intent_seed)
-    card2 = deck.draw_card(intent=intent_seed)
-    card3 = deck.draw_card(intent=intent_seed)
+    cards = []
+    for i in range(3):
+        card = deck.draw_card(intent=intent_seed*dt.now().microsecond)
+        cards.append(card)
 
-    card1_message = read_card(card1)
-    card2_message = read_card(card2)
-    card3_message = read_card(card3)
+    positions = (
+        "First",
+        "Second",
+        "Third",
+    )
+
+    messages = tuple(read_card(card) for card in cards)
+    card_strings = tuple(str(card) for card in cards)
 
     return {
-        "spread": ("First", "Second", "Third"),
-        "cards": (str(card1), str(card2), str(card3)),
-        "messages": (card1_message, card2_message, card3_message),
+        "spread": positions,
+        "cards": card_strings,
+        "messages": messages,
     }
 
 def draw_past_present_future(
@@ -72,19 +78,23 @@ def draw_past_present_future(
         intent_seed = intent_module.read_intent(intent)
     else:
         intent_seed = intent
+    cards = []
+    for i in range(3):
+        card = deck.draw_card(intent=intent_seed*dt.now().microsecond)
+        cards.append(card)
+    positions = (
+            "Past",
+            "Present",
+            "Future",
+    )
 
-    past = deck.draw_card(intent=intent_seed)
-    present = deck.draw_card(intent=intent_seed)
-    future = deck.draw_card(intent=intent_seed)
-
-    past_message = read_card(past)
-    present_message = read_card(present)
-    future_message = read_card(future)
+    messages = tuple(read_card(card) for card in cards)
+    card_strings = tuple(str(card) for card in cards)
 
     return {
-        "spread": ("Past", "Present", "Future"),
-        "cards": (str(past), str(present), str(future)),
-        "messages": (past_message, present_message, future_message),
+        "spread": positions,
+        "cards": card_strings,
+        "messages": messages,
     }
 
 
@@ -97,7 +107,7 @@ def draw_celtic_cross(deck: tarot.Deck, intent: int | str | dt) -> dict:
     # Draw 10 cards for the Celtic Cross spread
     cards = []
     for i in range(10):
-        card = deck.draw_card(intent=intent_seed)
+        card = deck.draw_card(intent=intent_seed*dt.now().microsecond)
         cards.append(card)
 
     # Celtic Cross positions in traditional order

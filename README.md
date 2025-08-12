@@ -9,11 +9,11 @@ When called without options, Taort-CLI will go into an interactive mode. Type
 ## Options
 
 Tarot CLI currently supports the following options:
--`-s`: spread, defines what spread to use for your reading (Draw one,
+- `-s`: spread, defines what spread to use for your reading (Draw one,
         past present future, and Celtic cross)
--`-p`: prompt, use a specific question to guide your tarot reading
+- `-p`: prompt, use a specific question to guide your tarot reading
         (implementation details below)
--`-n`: noprompt, disables repetitive asking for prompt in interactive mode if
+- `-n`: noprompt, disables repetitive asking for prompt in interactive mode if
         it is not desired
 
 ## Spreads

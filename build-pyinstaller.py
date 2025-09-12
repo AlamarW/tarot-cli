@@ -40,14 +40,14 @@ def build_executable():
         "tarot",  # Name the executable 'tarot'
         "--clean",  # Clean PyInstaller cache
         "--noconfirm",  # Overwrite without asking
-        "src/main.py",  # Entry point
+        "src/tarot_cli/main.py",  # Entry point
     ]
 
     print("Building executable with PyInstaller...")
     print(f"Command: {' '.join(cmd)}")
 
     try:
-        result = subprocess.run(cmd, check=True, capture_output=True, text=True)
+        subprocess.run(cmd, check=True, capture_output=True, text=True)
         print("Build successful!")
         print(f"Executable created at: {dist_dir / 'tarot'}")
         return True

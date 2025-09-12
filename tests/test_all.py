@@ -1,8 +1,8 @@
 from __future__ import annotations
-import src.models as tarot
-import src.builders as builders
-import src.spreads as spreads
-import src.intent as intent
+import tarot_cli.models as tarot
+import tarot_cli.builders as builders
+import tarot_cli.spreads as spreads
+import tarot_cli.intent as intent
 from datetime import datetime
 
 import pytest

@@ -40,7 +40,7 @@ def build_executable():
         "tarot",  # Name the executable 'tarot'
         "--clean",  # Clean PyInstaller cache
         "--noconfirm",  # Overwrite without asking
-        "src/main.py",  # Entry point
+        "src/tarot_cli/main.py",  # Entry point
     ]
 
     print("Building executable with PyInstaller...")

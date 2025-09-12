@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import src.models as tarot
-import src.intent as intent_module
+from . import models as tarot
+from . import intent as intent_module
 from typing import Callable
 from datetime import datetime as dt
 

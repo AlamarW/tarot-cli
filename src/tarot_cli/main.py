@@ -1,6 +1,6 @@
-import src.builders as builds
-import src.spreads as spreads
-import src.intent as intent
+import tarot_cli.builders as builds
+import tarot_cli.spreads as spreads
+import tarot_cli.intent as intent
 from datetime import datetime as dt
 import sys
 import optparse

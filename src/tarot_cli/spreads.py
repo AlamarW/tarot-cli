@@ -7,7 +7,7 @@ from datetime import datetime as dt
 
 
 def process_draw(inp: str) -> Callable:
-    action_dict = {
+    action_dict: dict[str, Callable] = {
         "draw one": draw_one,
         "draw": draw_one,
         "past present future": draw_past_present_future,

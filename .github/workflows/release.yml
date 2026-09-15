@@ -26,7 +26,7 @@ jobs:
     - name: Build
       run: |
         uv sync
-        uv run python build.py
+        uv run python build-pyinstaller.py
     - name: Rename binary for release
       run: |
         if [[ "${{ runner.os }}" == "Windows" ]]; then
